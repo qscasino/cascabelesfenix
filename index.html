@@ -1,0 +1,1712 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cascabeles de la Fortuna — Arkana Games</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --gold: #FFD700;
+      --gold-dark: #C5A028;
+      --gold-soft: #F4E4C1;
+      --gold-accent: #FFF8DC;
+
+      --burgundy: #800020;
+      --burgundy-dark: #5C0011;
+      --deep-red: #A52A2A;
+      --christmas-red: #C41E3A;
+      --dark-red: #8B0000;
+
+      --cream: #FFF8F0;
+      --white: #FFFFFF;
+      --warm-beige: #F5E6D3;
+
+      --ff-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --ff-display: 'Cinzel', serif;
+      --ff-ui: 'Teko', sans-serif;
+    }
+
+    body {
+      font-family: var(--ff-body);
+      background: 
+        radial-gradient(1200px 700px at 50% -10%, rgba(255,215,0,.15), transparent 60%),
+        radial-gradient(900px 600px at 80% 100%, rgba(196,30,58,.12), transparent 60%),
+        linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 35%, var(--deep-red) 70%, var(--christmas-red) 100%);
+      min-height: 100vh;
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /* Improved mobile padding and fixed background */
+      padding: clamp(10px, 3vw, 20px);
+      overflow-x: hidden;
+      position: relative;
+      letter-spacing: .1px;
+      line-height: 1.6;
+      background-attachment: fixed;
+    }
+
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 50%, var(--deep-red) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .preloader-logo {
+      max-width: 220px;
+      margin-bottom: 30px;
+      animation: logoFloat 2.5s ease-in-out infinite;
+      filter: drop-shadow(0 10px 30px rgba(255,215,0,.35));
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    .progress-bar-container {
+      width: 280px;
+      height: 4px;
+      background: rgba(255,215,0,.2);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-accent));
+      background-size: 200% 100%;
+      border-radius: 10px;
+      width: 0%;
+      animation: loadProgress 2s ease-out forwards, shimmerBar 1.5s linear infinite;
+      box-shadow: 0 0 10px rgba(255,215,0,.5);
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes shimmerBar {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .loading-text {
+      margin-top: 10px;
+      color: var(--gold-soft);
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-align: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,0.4), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(196,30,58,0.3), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.25), transparent),
+        radial-gradient(3px 3px at 80% 20%, rgba(255,215,0,0.2), transparent);
+      background-size: 200px 200px, 300px 300px, 250px 250px, 180px 180px;
+      animation: particles 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes particles {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      animation: fadeInDown 1s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      /* Made logo more responsive for mobile */
+      max-width: clamp(120px, 30vw, 200px);
+      height: auto;
+      margin-bottom: clamp(15px, 3vh, 25px);
+      filter: drop-shadow(0 4px 20px rgba(255,215,0,.4));
+    }
+
+    .event-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--burgundy), var(--dark-red));
+      font-family: var(--ff-ui);
+      font-size: clamp(.8rem, 2.2vw, .95rem);
+      line-height: 1;
+      letter-spacing: .4px;
+      color: var(--gold);
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(128,0,32,.4);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--ff-display);
+      font-weight: 700;
+      line-height: 1.12;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      margin-bottom: 14px;
+      letter-spacing: .2px;
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      margin: 0 auto;
+      color: rgba(255,248,240,.92);
+      font-size: clamp(1rem, 2.2vw, 1.1rem);
+    }
+
+    .sound-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(128,0,32,0.9);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-control:hover {
+      background: var(--gold);
+      color: var(--burgundy-dark);
+      transform: scale(1.1);
+    }
+
+    .game-container {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 1;
+      animation: fadeInUp 1s ease .25s both;
+      /* Removed fixed min-height for better mobile adaptation */
+      min-height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fireplace-scene {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      /* Responsive margin for mobile */
+      margin-top: clamp(30px, 6vh, 60px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Responsive bottom padding */
+      padding-bottom: clamp(40px, 8vh, 80px);
+    }
+
+    /* Improved mantle with better depth and texture */
+    .mantle {
+      position: relative;
+      width: 100%;
+      /* Responsive mantle height */
+      height: clamp(35px, 6vw, 50px);
+      background: linear-gradient(135deg, #6B3410, #8B4513, #6B3410);
+      border-radius: 6px 6px 0 0;
+      box-shadow: 
+        0 -4px 20px rgba(0,0,0,.5),
+        0 4px 15px rgba(0,0,0,.4),
+        inset 0 2px 10px rgba(255,215,0,.15);
+      z-index: 5;
+    }
+
+    .mantle::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -35px;
+      right: -35px;
+      height: 35px;
+      background: linear-gradient(135deg, #5C3317, #8B4513, #6B3410);
+      border-radius: 8px 8px 0 0;
+      box-shadow: 
+        0 6px 20px rgba(0,0,0,.6),
+        inset 0 -3px 10px rgba(0,0,0,.3);
+    }
+
+    .fireplace-body {
+      position: relative;
+      width: 95%;
+      /* Responsive fireplace height */
+      height: clamp(300px, 60vh, 450px);
+      background: linear-gradient(135deg, #6B3410, #8B4513, #6B3410);
+      border-radius: 0 0 12px 12px;
+      box-shadow: 
+        inset 0 0 50px rgba(0,0,0,.7),
+        0 10px 50px rgba(0,0,0,.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .fireplace-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          transparent 0px,
+          transparent 40px,
+          rgba(0,0,0,.2) 40px,
+          rgba(0,0,0,.2) 43px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 80px,
+          rgba(0,0,0,.15) 80px,
+          rgba(0,0,0,.15) 83px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .fireplace-arch {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 65%;
+      height: 70%;
+      background: radial-gradient(ellipse at center, #2C1810, #1A0F0A);
+      border-radius: 50% 50% 5% 5% / 60% 60% 5% 5%;
+      box-shadow: 
+        inset 0 0 60px rgba(0,0,0,.9),
+        inset 0 -20px 40px rgba(255,100,0,.3),
+        0 0 40px rgba(0,0,0,.8);
+      z-index: 2;
+      border: 8px solid;
+      border-color: #4A2511 #6B3410 #8B4513;
+    }
+
+    /* Enhanced fire with more realistic flames and glow effects */
+    .fire-container {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 40%;
+      z-index: 3;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 20px;
+      filter: drop-shadow(0 0 30px rgba(255,100,0,.7));
+    }
+
+    .flame {
+      position: relative;
+      width: 80px;
+      height: 120px;
+      background: 
+        radial-gradient(ellipse at center bottom, #FF4500 0%, transparent 60%),
+        radial-gradient(ellipse at center, #FFA500 20%, transparent 70%),
+        linear-gradient(to top, #FF4500 0%, #FFA500 40%, #FFD700 70%, rgba(255,215,0,0.3) 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      box-shadow: 
+        0 0 30px #FF4500,
+        0 0 60px #FFA500,
+        0 0 90px rgba(255,165,0,.5);
+      animation: flameFlicker 1.5s ease-in-out infinite;
+      filter: blur(2px);
+    }
+
+    .flame::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      height: 60%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,.6) 0%, rgba(255,215,0,.3) 50%, transparent 100%);
+      border-radius: 50%;
+      animation: innerFlame 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes innerFlame {
+      0%, 100% { opacity: 0.8; transform: translateX(-50%) scaleY(1); }
+      50% { opacity: 1; transform: translateX(-50%) scaleY(1.1); }
+    }
+
+    .flame:nth-child(1) {
+      animation-delay: 0s;
+      height: 140px;
+    }
+
+    .flame:nth-child(2) {
+      animation-delay: 0.3s;
+      height: 110px;
+      width: 70px;
+    }
+
+    .flame:nth-child(3) {
+      animation-delay: 0.6s;
+      height: 130px;
+    }
+
+    @keyframes flameFlicker {
+      0%, 100% { 
+        transform: scaleY(1) scaleX(1);
+        opacity: 0.9;
+      }
+      25% { 
+        transform: scaleY(1.1) scaleX(0.95);
+        opacity: 1;
+      }
+      50% { 
+        transform: scaleY(0.95) scaleX(1.05);
+        opacity: 0.85;
+      }
+      75% { 
+        transform: scaleY(1.05) scaleX(0.98);
+        opacity: 0.95;
+      }
+    }
+
+    .logs {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 15%;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .log {
+      width: 100px;
+      height: 25px;
+      background: linear-gradient(135deg, #3D2817, #2C1810, #1A0F0A);
+      border-radius: 15px;
+      box-shadow: 
+        inset 0 2px 5px rgba(0,0,0,.8),
+        0 2px 10px rgba(0,0,0,.7);
+      position: relative;
+    }
+
+    .log::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, #FF4500, #FFA500, #FF4500);
+      border-radius: 50%;
+      animation: emberGlow 2s ease-in-out infinite;
+      box-shadow: 0 0 10px #FF4500;
+    }
+
+    @keyframes emberGlow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .bells-wrapper {
+      position: absolute;
+      top: clamp(-45px, -8vw, -25px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: clamp(30px, 6vw, 60px);   /* un poco menos de gap por defecto */
+      z-index: 10;
+      width: 100%;
+      justify-content: center;
+      padding: 0 clamp(10px, 3vw, 20px);
+      flex-wrap: nowrap;             /* ✅ nunca baja a otra línea */
+    }
+
+    .bell-container {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    .bell-container:hover:not(.played) {
+      transform: translateY(-8px);
+    }
+
+    .bell-container.played {
+      cursor: pointer;
+      opacity: 0.9;
+    }
+
+    .bell-ribbon {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 50px;
+      background: linear-gradient(to bottom, #C41E3A, #8B0000);
+      box-shadow: 
+        inset -1px 0 2px rgba(0,0,0,.4),
+        2px 0 5px rgba(0,0,0,.3);
+      transform-origin: top center;
+      z-index: -1;
+      border-radius: 3px;
+    }
+
+    .bell-container.swinging .bell-ribbon {
+      animation: ribbonSwing 0.8s ease-in-out;
+    }
+
+    @keyframes ribbonSwing {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(12deg); }
+      75% { transform: translateX(-50%) rotate(-12deg); }
+    }
+
+    .bell-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      /* Increased touch target size for mobile */
+      min-width: 60px;
+      min-height: 60px;
+      padding: 10px;
+    }
+
+    .bell {
+      position: relative;
+      /* Responsive bell sizing */
+      width: clamp(55px, 10vw, 80px);
+      height: clamp(66px, 12vw, 96px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .bell-container.swinging .bell {
+      animation: bellSwing 0.8s ease-in-out;
+    }
+
+    @keyframes bellSwing {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      75% { transform: rotate(-12deg); }
+    }
+
+    .bell-top {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 16px;
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold));
+      border-radius: 50% 50% 0 0;
+      box-shadow: 
+        0 3px 10px rgba(255,215,0,.5),
+        inset 0 -2px 4px rgba(0,0,0,.2);
+    }
+
+    .bell-body {
+      /* Responsive bell body sizing */
+      width: clamp(55px, 10vw, 80px);
+      height: clamp(55px, 10vw, 80px);
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+      clip-path: polygon(
+        20% 0%, 80% 0%,
+        95% 30%, 100% 60%,
+        98% 85%, 90% 95%,
+        70% 100%, 30% 100%,
+        10% 95%, 2% 85%,
+        0% 60%, 5% 30%
+      );
+      box-shadow: 
+        0 8px 20px rgba(255,165,0,.6),
+        inset -8px 0 15px rgba(0,0,0,.15),
+        inset 8px 0 15px rgba(255,255,255,.2);
+      filter: drop-shadow(0 4px 12px rgba(255,215,0,.4));
+    }
+
+    .bell-shine {
+      position: absolute;
+      top: 15px;
+      left: 12px;
+      width: 15px;
+      height: 30px;
+      background: linear-gradient(135deg, rgba(255,255,255,.6), transparent);
+      border-radius: 50%;
+      filter: blur(3px);
+    }
+
+    .bell-clapper {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 9px;
+      height: 14px;
+      background: linear-gradient(135deg, #C0C0C0, #808080);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      box-shadow: 0 2px 6px rgba(0,0,0,.4);
+    }
+
+    .bell-container.swinging .bell-clapper {
+      animation: clapperSwing 0.8s ease-in-out;
+    }
+
+    @keyframes clapperSwing {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(-18deg); }
+      75% { transform: translateX(-50%) rotate(18deg); }
+    }
+
+    .bell-label {
+      /* Responsive label text */
+      font-size: clamp(0.75rem, 2vw, 1rem);
+      color: var(--gold);
+      font-weight: 700;
+      /* Responsive margin */
+      margin-top: clamp(8px, 2vw, 12px);
+      text-shadow: 0 0 10px rgba(255,215,0,.5);
+      font-family: var(--ff-ui);
+      white-space: nowrap;
+    }
+
+    .played-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    /* Enhanced garlands with pine needle texture and better 3D effect */
+    .garland {
+      position: absolute;
+      top: -50px;
+      left: 5%;
+      right: 5%;
+      height: 60px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 6;
+    }
+
+    .garland-leaf {
+      position: relative;
+      width: 90px;
+      height: 45px;
+      background: 
+        radial-gradient(ellipse at 30% 30%, #3A8B5D, transparent 70%),
+        radial-gradient(ellipse at 70% 60%, #2D7A4F, transparent 80%),
+        linear-gradient(135deg, #1B6B3D, #2D7A4F, #3A8B5D);
+      border-radius: 50%;
+      box-shadow: 
+        0 4px 15px rgba(0,0,0,.5),
+        inset -2px -2px 8px rgba(0,0,0,.3),
+        inset 2px 2px 8px rgba(255,255,255,.15);
+      transform: rotate(var(--rotation, 0deg));
+      border: 2px solid rgba(15,81,50,0.6);
+    }
+
+    .garland-leaf::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 25%;
+      width: 15px;
+      height: 8px;
+      background: radial-gradient(circle at center, rgba(255,255,255,.3), transparent);
+      border-radius: 50%;
+      filter: blur(2px);
+    }
+
+    .garland-leaf::after {
+      content: '✨';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+      animation: sparkle 2s ease-in-out infinite;
+      animation-delay: calc(var(--delay, 0) * 0.3s);
+      filter: drop-shadow(0 0 3px rgba(255,215,0,.8));
+    }
+
+    .garland-leaf:nth-child(even) {
+      --rotation: 15deg;
+    }
+
+    .garland-leaf:nth-child(odd) {
+      --rotation: -15deg;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.8); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    /* Improved gift boxes with better ribbons and depth */
+    .gifts-container {
+      position: absolute;
+      bottom: clamp(30px, 5vh, 50px); /* altura respecto al borde de la chimenea */
+      left: 0;
+      right: 0;
+      max-width: 95%;
+      margin: 0 auto;
+      pointer-events: none;
+    }
+
+    /* Ya no usamos flex, solo contenedores “vacíos” */
+    .gifts-left,
+    .gifts-right {
+      position: static;
+      display: block;
+    }
+
+    /* Todas las cajas se posicionan de forma absoluta
+      dentro de .gifts-container */
+    .gift {
+      position: absolute;
+      pointer-events: auto;
+    }
+
+    /* 📌 ACA MANEJÁS LA POSICIÓN DE CADA CAJA */
+    .gift-1 {     /* izquierda abajo */
+      left: 17%;
+      bottom: 0;
+    }
+
+    .gift-2 {     /* izquierda arriba */
+      left: 86%;
+      bottom: 0px;
+    }
+
+    .gift-3 {     /* derecha abajo */
+      right: 15%;
+      bottom: 0;
+    }
+
+    .gift-4 {     /* derecha arriba */
+      right: 200;
+      bottom: 0px;
+    }
+
+    .gift-box-css {
+      border-radius: 4px;
+      box-shadow: 
+        0 8px 20px rgba(0,0,0,.5),
+        inset -3px -3px 10px rgba(0,0,0,.3),
+        inset 3px 3px 10px rgba(255,255,255,.1);
+      position: relative;
+    }
+
+    .gift.gift-1 .gift-box-css {
+      background: linear-gradient(135deg, #0F5132, #1B6B3D);
+      width: 90px;
+      height: 90px;
+    }
+
+    .gift.gift-2 .gift-box-css {
+      background: linear-gradient(135deg, #C41E3A, #8B0000);
+      width: 70px;
+      height: 70px;
+    }
+
+    .gift.gift-3 .gift-box-css {
+      background: linear-gradient(135deg, #4169E1, #1E3A8A);
+      width: 110px;
+      height: 110px;
+    }
+
+    .gift.gift-4 .gift-box-css {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      width: 85px;
+      height: 85px;
+    }
+
+    /* Enhanced ribbon styling with better shading */
+    .gift-ribbon-vertical {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 100%;
+      z-index: 2;
+      box-shadow: inset -2px 0 4px rgba(0,0,0,.3), inset 2px 0 4px rgba(255,255,255,.2);
+      border-left: 1px solid rgba(0,0,0,.2);
+      border-right: 1px solid rgba(255,255,255,.2);
+    }
+
+    .gift.gift-1 .gift-ribbon-vertical {
+      background: linear-gradient(to bottom, #FFD700, #FFA500, #FFD700);
+    }
+
+    .gift.gift-2 .gift-ribbon-vertical {
+      background: linear-gradient(to bottom, #0F5132, #1B6B3D, #0F5132);
+    }
+
+    .gift.gift-3 .gift-ribbon-vertical {
+      background: linear-gradient(to bottom, #FFD700, #FFA500, #FFD700);
+    }
+
+    .gift.gift-4 .gift-ribbon-vertical {
+      background: linear-gradient(to bottom, #C41E3A, #8B0000, #C41E3A);
+    }
+
+    .gift-ribbon-horizontal {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 14px;
+      z-index: 2;
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,.3), inset 0 2px 4px rgba(255,255,255,.2);
+      border-top: 1px solid rgba(255,255,255,.2);
+      border-bottom: 1px solid rgba(0,0,0,.2);
+    }
+
+    .gift.gift-1 .gift-ribbon-horizontal {
+      background: linear-gradient(to right, #FFD700, #FFA500, #FFD700);
+    }
+
+    .gift.gift-2 .gift-ribbon-horizontal {
+      background: linear-gradient(to right, #0F5132, #1B6B3D, #0F5132);
+    }
+
+    .gift.gift-3 .gift-ribbon-horizontal {
+      background: linear-gradient(to right, #FFD700, #FFA500, #FFD700);
+    }
+
+    .gift.gift-4 .gift-ribbon-horizontal {
+      background: linear-gradient(to right, #C41E3A, #8B0000, #C41E3A);
+    }
+
+    .gift-bow {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 35px;
+      height: 25px;
+      border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+      box-shadow: 
+        0 4px 10px rgba(0,0,0,.4),
+        -20px 0 0 -5px currentColor,
+        20px 0 0 -5px currentColor,
+        inset 0 2px 4px rgba(255,255,255,.3);
+      z-index: 3;
+    }
+
+    .gift.gift-1 .gift-bow {
+      background: radial-gradient(circle at center, #FFA500, #FF8C00);
+      color: #FFA500;
+    }
+
+    .gift.gift-2 .gift-bow {
+      background: radial-gradient(circle at center, #1B6B3D, #0F5132);
+      color: #1B6B3D;
+    }
+
+    .gift.gift-3 .gift-bow {
+      background: radial-gradient(circle at center, #FFA500, #FF8C00);
+      color: #FFA500;
+    }
+
+    .gift.gift-4 .gift-bow {
+      background: radial-gradient(circle at center, #8B0000, #C41E3A);
+      color: #8B0000;
+    }
+
+    .gift-bow::before,
+    .gift-bow::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: inherit;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 1px 3px rgba(255,255,255,.2);
+    }
+
+    .gift-bow::before {
+      left: -18px;
+      top: 2px;
+    }
+
+    .gift-bow::after {
+      right: -18px;
+      top: 2px;
+    }
+
+    .instruction-text {
+      margin-top: 25px;
+      text-align: center;
+      color: var(--gold-accent);
+      font-size: 1.1rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+    
+    .promo-text {
+      font-family: var(--ff-ui);
+      /* Improved text scaling for small screens */
+      font-size: clamp(0.75rem, 2.5vw, 1rem);
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: clamp(15px, 3vh, 25px);
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(255,215,0,.6);
+      padding: 0 10px;
+      text-align: center;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn .3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, var(--burgundy-dark), var(--burgundy));
+      border-radius: 22px;
+      /* Responsive modal padding */
+      padding: clamp(24px, 5vw, 46px);
+      max-width: 500px;
+      width: 95%;
+      text-align: center;
+      position: relative;
+      border: 2px solid var(--gold);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.55),
+        0 0 40px rgba(255,215,0,.3);
+      animation: modalIn .5s cubic-bezier(.68,-.55,.265,1.55);
+      /* Ensure modal doesn't overflow on small screens */
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.85) translateY(40px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      /* Responsive close button positioning and sizing */
+      right: clamp(10px, 3vw, 20px);
+      top: clamp(10px, 3vw, 20px);
+      color: var(--gold);
+      font-size: clamp(28px, 6vw, 35px);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      /* Increased touch target for mobile */
+      width: clamp(36px, 8vw, 44px);
+      height: clamp(36px, 8vw, 44px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,215,0,.2);
+      border: 2px solid rgba(255,215,0,.4);
+    }
+
+    .modal-close:hover {
+      background: rgba(255,215,0,.3);
+      transform: rotate(90deg);
+    }
+
+    .modal-title {
+      font-family: var(--ff-display);
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      color: var(--gold);
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255,215,0,.5);
+    }
+
+    .modal-prize-details {
+      margin: 20px 0;
+    }
+
+    .modal-prize-emoji {
+      /* Responsive emoji size */
+      font-size: clamp(60px, 15vw, 80px);
+      margin-bottom: 15px;
+      animation: bounce 1s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .modal-prize-text {
+      font-family: var(--ff-ui);
+      /* Responsive prize text */
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: .4px;
+      margin-bottom: 10px;
+    }
+
+    .modal-message {
+      color: var(--cream);
+      /* Responsive message text */
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
+      margin: 15px 0;
+      padding: 0 10px;
+    }
+
+    .modal-button {
+      background: linear-gradient(135deg, var(--gold), var(--gold-accent));
+      color: var(--burgundy-dark);
+      border: none;
+      /* Responsive button padding */
+      padding: clamp(12px, 3vw, 14px) clamp(30px, 8vw, 40px);
+      /* Responsive button font size */
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: transform .2s ease;
+      letter-spacing: .2px;
+      box-shadow: 0 10px 30px rgba(255,215,0,.45);
+      font-family: var(--ff-body);
+      /* Minimum touch target size */
+      min-height: 44px;
+    }
+
+    .modal-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .modal-button:active {
+      transform: translateY(0);
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      animation: confetti-fall 3s linear forwards;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Improved tablet breakpoint */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .title {
+        font-size: clamp(1.8rem, 6vw, 2.5rem);
+        margin-bottom: 15px;
+      }
+
+      .fireplace-scene {
+        margin-top: 30px;
+        padding-bottom: 50px;
+      }
+
+      .bells-wrapper {
+        gap: clamp(35px, 7vw, 50px);
+        padding: 0 15px;
+      }
+
+      .fireplace-body {
+        height: clamp(280px, 55vh, 400px);
+      }
+
+      .gifts-container {
+        padding: 0 15px;
+        bottom: clamp(15px, 4vh, 30px);
+      }
+
+      .gift.gift-1 .gift-box-css {
+        width: clamp(60px, 12vw, 70px);
+        height: clamp(60px, 12vw, 70px);
+      }
+
+      .gift.gift-2 .gift-box-css {
+        width: clamp(50px, 10vw, 60px);
+        height: clamp(50px, 10vw, 60px);
+      }
+
+      .gift.gift-3 .gift-box-css {
+        width: clamp(80px, 16vw, 100px);
+        height: clamp(80px, 16vw, 100px);
+      }
+
+      .gift.gift-4 .gift-box-css {
+        width: clamp(65px, 13vw, 75px);
+        height: clamp(65px, 13vw, 75px);
+      }
+    }
+
+    /* Enhanced mobile breakpoint for small phones */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .title {
+        font-size: clamp(1.5rem, 5.5vw, 2rem);
+        margin-bottom: 10px;
+        padding: 0 10px;
+      }
+
+      .subtitle {
+        font-size: clamp(0.85rem, 3vw, 1rem);
+        padding: 0 15px;
+      }
+
+      .fireplace-scene {
+        margin-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      .bells-wrapper {
+        gap: clamp(25px, 6vw, 40px);
+        padding: 0 10px;
+        top: clamp(-40px, -7vw, -30px);
+      }
+
+      .mantle {
+        height: clamp(30px, 5vw, 40px);
+      }
+
+      .fireplace-body {
+        height: clamp(250px, 50vh, 350px);
+        width: 98%;
+      }
+
+      .gifts-container {
+        bottom: clamp(10px, 3vh, 20px);
+        padding: 0 10px;
+      }
+
+      .gift.gift-1 .gift-box-css,
+      .gift.gift-2 .gift-box-css {
+        width: clamp(45px, 10vw, 55px);
+        height: clamp(45px, 10vw, 55px);
+      }
+
+      .gift.gift-3 .gift-box-css {
+        width: clamp(70px, 14vw, 85px);
+        height: clamp(70px, 14vw, 85px);
+      }
+
+      .gift.gift-4 .gift-box-css {
+        width: clamp(55px, 11vw, 65px);
+        height: clamp(55px, 11vw, 65px);
+      }
+
+      .gift-bow {
+        width: clamp(22px, 5vw, 26px);
+        height: clamp(16px, 4vw, 20px);
+        top: clamp(-10px, -2vw, -8px);
+      }
+
+      .gift-bow::before,
+      .gift-bow::after {
+        width: clamp(12px, 3vw, 15px);
+        height: clamp(12px, 3vw, 15px);
+      }
+
+      .instruction {
+        font-size: clamp(0.8rem, 2.3vw, 1rem);
+        margin-top: 15px;
+        padding: 0 10px;
+      }
+
+      .modal-content {
+        padding: 20px;
+        border-radius: 16px;
+      }
+    }
+
+    /* Added extra small mobile breakpoint for very small devices */
+    @media (max-width: 480px) {
+      .bells-wrapper {
+        top:30px;
+        gap: 10px;          /* MUCHO menos espacio entre ellos */
+        padding: 0 6px;     /* casi sin márgenes laterales */
+        flex-wrap: nowrap;  /* garantizamos una sola línea en celu también */
+      }
+
+      /* cascabeles más compactos */
+      .bell-wrapper {
+        min-width: 40px;
+        padding: 6px;
+      }
+
+      .bell {
+        width: 44px;
+        height: 54px;
+      }
+
+      .bell-body {
+        width: 44px;
+        height: 44px;
+      }
+
+      .bell-label {
+        font-size: 0.7rem;
+        margin-top: 4px;
+      }
+    }
+
+    /* Landscape orientation optimizations */
+    @media (max-height: 600px) and (orientation: landscape) {
+      body {
+        padding: 10px;
+      }
+
+      .fireplace-scene {
+        margin-top: 20px;
+        padding-bottom: 30px;
+      }
+
+      .fireplace-body {
+        height: 250px;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 0.85rem;
+      }
+
+      .instruction {
+        margin-top: 15px;
+        font-size: 0.9rem;
+      }
+
+      .modal-content {
+        max-height: 85vh;
+        padding: 20px;
+      }
+    }
+
+    /* SOLO escritorio (pantallas más grandes que tablet) */
+    @media (min-width: 769px) {
+      .bells-wrapper {
+        top: 30px;   /* probá con -5, 0, 10 hasta que te guste */
+      }
+    }
+
+
+    /* SOLO escritorio (PC / tablets grandes) */
+    @media (min-width: 769px) {
+
+      /* altura general de las cajas respecto a la chimenea */
+      .gifts-container {
+        bottom: 40px;         /* subí o bajá esta cifra para todo el bloque de cajas */
+      }
+
+      /* posición individual de cada caja */
+      .gift-1 {
+        left: 0%;             /* más hacia la izquierda o derecha */
+        bottom: 0px;          /* más arriba/abajo */
+      }
+
+      .gift-2 {
+        left: 11%;
+        bottom: 0px;         /* por ejemplo, una caja arriba de la otra */
+      }
+
+      .gift-3 {
+        right:0%;
+        bottom: 0px;
+      }
+
+      .gift-4 {
+        right: 13%;
+        bottom: 0px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preloader" id="preloader">
+    <img src="assets/image.png" alt="Arkana Games" class="preloader-logo">
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="loading-text">Cargando cascabeles...</div>
+  </div>
+
+  <button class="sound-control" id="soundControl" aria-label="Control de sonido">
+    🔊
+  </button>
+
+  <div class="header">
+    <img src="assets/image.png" alt="Arkana Games" class="logo">
+    <h1>Cascabeles de la Fortuna</h1>
+    <p class="subtitle">Elegí uno de los cascabeles mágicos y descubrí tu premio especial del día. ¡La suerte está de tu lado!</p>
+  </div>
+
+  <div class="game-container">
+    <div class="fireplace-scene">
+      <div class="garland">
+        <div class="garland-leaf" style="--delay: 0;"></div>
+        <div class="garland-leaf" style="--delay: 1;"></div>
+        <div class="garland-leaf" style="--delay: 2;"></div>
+        <div class="garland-leaf" style="--delay: 3;"></div>
+        <div class="garland-leaf" style="--delay: 4;"></div>
+        <div class="garland-leaf" style="--delay: 5;"></div>
+        <div class="garland-leaf" style="--delay: 6;"></div>
+      </div>
+
+      <div class="bells-wrapper" id="bellsWrapper"></div>
+
+      <div class="mantle"></div>
+      
+      <div class="fireplace-body">
+        <div class="fireplace-arch">
+          <div class="fire-container">
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+          </div>
+          <div class="logs">
+            <div class="log"></div>
+            <div class="log"></div>
+            <div class="log"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gifts-container">
+        <div class="gifts-left">
+          <div class="gift gift-1">
+            <div class="gift-box-css">
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-bow"></div>
+          </div>
+          <div class="gift gift-2">
+            <div class="gift-box-css">
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-bow"></div>
+          </div>
+        </div>
+
+        <div class="gifts-right">
+          <div class="gift gift-3">
+            <div class="gift-box-css">
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-bow"></div>
+          </div>
+          <div class="gift gift-4">
+            <div class="gift-box-css">
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-bow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="instruction-text" id="instructionText">
+    </p>
+    <p class="promo-text" id="promoText">¡Oferta de Navidad! ¡Ganá un bono especial en tu próximo depósito!</p>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-title">¡Felicitaciones!</div>
+      <div class="modal-prize-details">
+        <div class="modal-prize-emoji" id="modalPrizeEmoji">💎</div>
+        <div class="modal-prize-text" id="modalPrizeText">¡Has ganado!</div>
+      </div>
+      <div class="modal-message" id="modalMessage">Tu premio te está esperando</div>
+      <button class="modal-button" id="modalButton">¡Reclamar Premio!</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio elements
+    const backgroundMusic = new Audio('assets/background-music.mp3');
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.3;
+
+    const bellSound = new Audio('assets/bell-sound.mp3');
+    bellSound.volume = 0.5;
+
+    const prizeSound = new Audio('assets/prize-sound.mp3');
+    prizeSound.volume = 0.5;
+
+    let isMuted = false;
+    const soundControl = document.getElementById('soundControl');
+    
+    const LS_PREFIX = 'arkanaCascabeles_';
+    
+    soundControl.addEventListener('click', () => {
+      isMuted = !isMuted;
+      if (isMuted) {
+        backgroundMusic.pause();
+        soundControl.textContent = '🔇';
+      } else {
+        backgroundMusic.play().catch(e => console.log('Audio play failed:', e));
+        soundControl.textContent = '🔊';
+      }
+    });
+
+    // Prize configuration
+    const prizes = [
+      { emoji: '💎', text: 'BONO A ELECCIÓN', message: '¡Increíble! Ganaste el premio máximo.' },
+      { emoji: '🎁', text: 'BONO SORPRESA', message: '¡Excelente! Un gran premio para mutiplicar tus ganancias.' },
+      { emoji: '🌟', text: 'BONO DEL 200%', message: '¡Fantástico! Tu próximo depósito se duplica.' },
+      { emoji: '✨', text: 'BONO DEL 150%', message: '¡Genial! Aumenta tu saldo.' },
+      { emoji: '🎊', text: 'BONO DEL 100%', message: '¡Bien hecho! Duplica tu próximo depósito.' }
+    ];
+
+    function hasPlayedToday() {
+      const lastPlayed = localStorage.getItem(LS_PREFIX + 'lastPlayed');
+      if (!lastPlayed) return false;
+    
+      const lastPlayedDate = new Date(parseInt(lastPlayed));
+      const today = new Date();
+    
+      return (
+        lastPlayedDate.getFullYear() === today.getFullYear() &&
+        lastPlayedDate.getMonth() === today.getMonth() &&
+        lastPlayedDate.getDate() === today.getDate()
+      );
+    }
+    
+    function markAsPlayed(prize, bellIndex) {
+      localStorage.setItem(LS_PREFIX + 'lastPlayed', Date.now().toString());
+      localStorage.setItem(LS_PREFIX + 'prize', JSON.stringify(prize));
+      localStorage.setItem(LS_PREFIX + 'clickedIndex', bellIndex.toString());
+    }
+    
+    function getClickedBellIndex() {
+      const saved = localStorage.getItem(LS_PREFIX + 'clickedIndex');
+      return saved ? parseInt(saved) : null;
+    }
+    
+    function getSavedPrize() {
+      const saved = localStorage.getItem(LS_PREFIX + 'prize');
+      return saved ? JSON.parse(saved) : null;
+    }
+
+
+    function getRandomPrize() {
+      return prizes[Math.floor(Math.random() * prizes.length)];
+    }
+
+    function generateBells() {
+      const bellsWrapper = document.getElementById('bellsWrapper');
+      const alreadyPlayed = hasPlayedToday();
+      const clickedIndex = getClickedBellIndex();
+
+      bellsWrapper.innerHTML = '';
+
+      for (let i = 0; i < 5; i++) {
+        const bellContainer = document.createElement('div');
+        bellContainer.className = 'bell-container';
+        bellContainer.innerHTML = `
+          <div class="bell-wrapper">
+            <div class="bell-ribbon"></div>
+            <div class="bell">
+              <div class="bell-top"></div>
+              <div class="bell-body"></div>
+              <div class="bell-clapper"></div>
+            </div>
+            <div class="bell-string"></div>
+          </div>
+        `;
+
+        // ✅ Si ya jugó hoy, marcamos el cascabel correcto con el tilde
+        if (alreadyPlayed && clickedIndex === i) {
+          bellContainer.classList.add('played');
+          const indicator = document.createElement('div');
+          indicator.className = 'played-indicator';
+          indicator.textContent = '✓';
+          bellContainer.appendChild(indicator);
+        }
+
+        bellContainer.addEventListener('click', () => {
+          // ⚠️ IMPORTANTE: acá consultamos el estado ACTUAL, no las variables “viejas”
+          const playedToday = hasPlayedToday();
+          const savedIndex = getClickedBellIndex();
+          const savedPrize = getSavedPrize();
+
+          if (playedToday) {
+            if (savedIndex === i && savedPrize) {
+              // 👉 Tocó el MISMO cascabel: le mostramos el premio que ya ganó
+              showPrizeModal(savedPrize);
+            } else {
+              // 👉 Tocó otro cascabel: pop-up informativo, sin confetti
+              showInfoModal('Ya jugaste hoy. Tocá el cascabel donde ganaste para ver tu premio.');
+            }
+            return;
+          }
+
+          // Aún no jugó hoy → juega normalmente
+          handleBellClick(bellContainer, i);
+        });
+
+        bellsWrapper.appendChild(bellContainer);
+      }
+    }
+
+
+
+    function handleBellClick(bellContainer, bellIndex) {
+      if (bellContainer.classList.contains('played')) return;
+
+      backgroundMusic.pause();
+      if (!isMuted) {
+        bellSound.play().catch(e => console.log('Bell sound failed:', e));
+      }
+
+      bellContainer.classList.add('swinging');
+
+      setTimeout(() => {
+        const prize = getRandomPrize();
+        showPrizeModal(prize);
+        markAsPlayed(prize, bellIndex);
+
+        bellContainer.classList.add('played');
+        if (!bellContainer.querySelector('.played-indicator')) {
+          const indicator = document.createElement('div');
+          indicator.className = 'played-indicator';
+          indicator.textContent = '✓';
+          bellContainer.appendChild(indicator);
+        }
+      }, 800);
+    }
+
+    function showPrizeModal(prize) {
+      const modal = document.getElementById('modal');
+      const modalPrizeEmoji = document.getElementById('modalPrizeEmoji');
+      const modalPrizeText = document.getElementById('modalPrizeText');
+      const modalMessage = document.getElementById('modalMessage');
+
+      modalPrizeEmoji.textContent = prize.emoji;
+      modalPrizeText.textContent = prize.text;
+      modalMessage.textContent = prize.message;
+
+      modal.classList.add('active');
+
+      bellSound.pause();
+      bellSound.currentTime = 0;
+      
+      if (!isMuted) {
+        prizeSound.play().catch(e => console.log('Prize sound failed:', e));
+      }
+
+      createConfetti();
+    }
+
+    function showInfoModal(message) {
+      const modal = document.getElementById('modal');
+      const modalPrizeEmoji = document.getElementById('modalPrizeEmoji');
+      const modalPrizeText = document.getElementById('modalPrizeText');
+      const modalMessage = document.getElementById('modalMessage');
+
+      // Texto y emoji distintos para el mensaje informativo
+      modalPrizeEmoji.textContent = '🔔';
+      modalPrizeText.textContent = 'Ya jugaste hoy';
+      modalMessage.textContent = message;
+
+      modal.classList.add('active');
+
+      // Sin sonido de premio ni confetti
+      bellSound.pause();
+      bellSound.currentTime = 0;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('active');
+
+      prizeSound.pause();
+      prizeSound.currentTime = 0;
+      
+      if (!isMuted) {
+        backgroundMusic.play().catch(e => {
+          console.log('Autoplay prevented, user interaction required');
+        });
+      }
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalButton').addEventListener('click', closeModal);
+
+    function createConfetti() {
+      const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#4ECDC4', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3'];
+      const confettiCount = 80;
+
+      for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          confetti.style.animationDelay = '0s';
+
+          document.body.appendChild(confetti);
+
+          confetti.addEventListener('animationend', () => {
+            confetti.remove();
+          });
+        }, i * 30);
+      }
+    }
+
+    // Preloader logic
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+        
+        if (!isMuted) {
+          backgroundMusic.play().catch(e => {
+            console.log('Autoplay prevented, user interaction required');
+          });
+        }
+
+        generateBells();
+
+        if (hasPlayedToday()) {
+          document.getElementById('instructionText').textContent = '';
+        }
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
